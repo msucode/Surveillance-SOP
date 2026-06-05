@@ -56,12 +56,13 @@
             font-weight: 500;
         }
 
-        /* Responsive Dashboard Card Grid Layout */
+        /* Updated Responsive Dashboard Card Grid Layout (Accommodates 10 Cards Cleanly) */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr); /* Switched from 3 to 4 columns */
+            gap: 1.25rem;
         }
+
 
         .card {
             background: var(--bg-card);
@@ -121,7 +122,10 @@
             line-height: 1.4;
         }
 
-        /* Responsive Adaptations */
+         /* Responsive Matrix for Smaller Screens */
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (max-width: 992px) {
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
         }
