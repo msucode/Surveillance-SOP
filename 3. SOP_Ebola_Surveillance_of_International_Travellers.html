@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP: Monitoring of Passengers from Ebola Affected Countries</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #ca8a04;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --info-blue: #2563eb;
+            --bg-base: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        header {
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .header-top {
+            display: grid;
+            grid-template-columns: 2fr 3fr 2fr;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-meta-box {
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .header-meta-box:not(:last-child) {
+            border-right: 1px solid var(--border);
+        }
+
+        .header-meta-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 2px;
+        }
+        
+        .header-meta-row:last-child {
+            border-bottom: none;
+        }
+
+        .header-title-box {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #f1f5f9;
+        }
+
+        .header-title-box h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .header-title-box h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 3.5fr 5fr 3.5fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .panel-header {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 0.6rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-body {
+            padding: 1rem;
+        }
+
+        .panel-body h3 {
+            font-size: 0.95rem;
+            color: var(--primary-light);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 2px;
+        }
+
+        .panel-body h3:not(:first-child) {
+            margin-top: 1rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .flow-node {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .flow-node-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .flow-node-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .flow-arrow {
+            color: var(--border);
+            font-weight: bold;
+            font-size: 1.2rem;
+            line-height: 1;
+            margin: -0.25rem 0;
+        }
+
+        .flow-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .decision-box {
+            background: #fffbeb;
+            border: 1px dashed var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .action-yes {
+            border-top: 3px solid var(--danger);
+            background: #fef2f2;
+        }
+
+        .action-no {
+            border-top: 3px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .script-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .script-item {
+            display: flex;
+            gap: 0.75rem;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 0.6rem;
+            font-size: 0.88rem;
+        }
+
+        .script-num {
+            background: var(--primary-light);
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .disclaimer-panel {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-top: 4px solid var(--danger);
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .disclaimer-title {
+            text-align: center;
+            color: var(--danger);
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+        }
+
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .symptom-tag {
+            background: #ffffff;
+            border: 1px solid #fecdd3;
+            padding: 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #9f1239;
+        }
+
+        .legend-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #1e293b;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .header-top { grid-template-columns: 1fr; }
+            .header-meta-box { border-right: none !important; border-bottom: 1px solid var(--border); }
+            .symptom-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <div class="header-meta-box">
+                    <div class="header-meta-row"><strong>Document No.</strong> <span>: _________________</span></div>
+                    <div class="header-meta-row"><strong>Version No.</strong> <span>: _________________</span></div>
+                    <div class="header-meta-row"><strong>Effective Date</strong> <span>: _________________</span></div>
+                </div>
+                <div class="header-title-box">
+                    <h1>Standard Operating Procedure (SOP)</h1>
+                    <h2>SOP Monitoring of Passengers From Ebola Affected Countries</h2>
+                </div>
+                <div class="header-meta-box">
+                    <div class="header-meta-row"><strong>Review Date</strong> <span>: _________________</span></div>
+                    <div class="header-meta-row"><strong>Prepared By</strong> <span>: _________________</span></div>
+                    <div class="header-meta-row"><strong>Approved By</strong> <span>: _________________</span></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <div class="column">
+                <div class="panel">
+                    <div class="panel-header">1. Purpose</div>
+                    <div class="panel-body">
+                        <p style="font-size: 0.9rem; color: var(--text-dark);">
+                            To ensure systematic monitoring of passengers arriving from Ebola affected countries through daily telephonic surveillance for 21 days after arrival for early detection of Ebola Virus Disease and timely public health intervention.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">2. Roles & Responsibilities</div>
+                    <div class="panel-body">
+                        <h3>Nilesh / Data Management Staff</h3>
+                        <ul>
+                            <li>Receive passenger list from Airport Health Organization (APHO).</li>
+                            <li>Remove duplicate records.</li>
+                            <li>Place newly added passengers at top of the list.</li>
+                            <li>Verify ward allocation and update master line-list.</li>
+                        </ul>
+                        <h3>Ward Co-ordinator</h3>
+                        <ul>
+                            <li>Conduct daily telephonic follow-up.</li>
+                            <li>Ask required questions in given sequence.</li>
+                            <li>Record symptoms and remarks.</li>
+                            <li>Update Day 1 to Day 21 status.</li>
+                            <li>Escalate symptomatic passenger as per protocol.</li>
+                        </ul>
+                        <h3>Medical Officer / Supervisor</h3>
+                        <ul>
+                            <li>Review symptomatic passengers.</li>
+                            <li>Provide necessary guidance.</li>
+                            <li>Ensure appropriate referral and management.</li>
+                            <li>Monitor surveillance activities.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">3. Key Definitions</div>
+                    <div class="panel-body" style="font-size: 0.88rem;">
+                        <p style="margin-bottom: 0.5rem;"><strong>APHO :</strong> Airport Health Organization</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Active Surveillance :</strong> Daily telephonic monitoring of passengers for 21 days from the date of arrival.</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Symptomatic Passenger :</strong> Passenger having fever, body ache, headache, weakness or any other symptom compatible with Ebola Virus Disease.</p>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">4. Surveillance Period</div>
+                    <div class="panel-body">
+                        <p style="font-size: 0.9rem;">Active surveillance will be continued for <strong>21 days</strong> from the date of arrival in Mumbai/India.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="panel">
+                    <div class="panel-header" style="background: var(--primary-light);">Central Core Workflow Timeline</div>
+                    <div class="panel-body">
+                        <div class="flow-container">
+                            <div class="flow-node" style="background: #f1f5f9; border-radius: 20px; max-width: 150px; font-weight: 700;">START</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">1. Read Passenger List from APHO</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node">
+                                <div class="flow-node-title">2. Arrange Calling List</div>
+                                <div class="flow-node-desc" style="text-align: left; padding-left: 1rem;">
+                                    • Remove duplicate entries<br>• Place newly added passengers at top<br>• Verify / update ward allocation
+                                </div>
+                            </div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">3. Prioritize Calls</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">4. Contact Passenger</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">5. Verify Travel Details</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">6. Health Assessment</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="decision-box">7. Symptoms Present?</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-split">
+                                <div class="flow-node action-yes">
+                                    <div style="color: var(--danger); font-weight:700;">YES</div>
+                                    <div class="flow-node-desc" style="color: var(--danger); font-weight:600;">Follow Ebola Response Protocol</div>
+                                </div>
+                                <div class="flow-node action-no">
+                                    <div style="color: var(--success); font-weight:700;">NO</div>
+                                    <div class="flow-node-desc">Continue Routine Surveillance</div>
+                                </div>
+                            </div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">8. Update Surveillance Sheet</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node"><div class="flow-node-title">9. Inform Passenger</div></div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="decision-box">11. Day 21 Completed?</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-split">
+                                <div class="flow-node" style="border-top:3px solid var(--info-blue);"><div style="color: var(--info-blue); font-weight:700;">NO (Loop to 4)</div></div>
+                                <div class="flow-node" style="border-top:3px solid var(--success);"><div style="color: var(--success); font-weight:700;">YES (Close Record)</div></div>
+                            </div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-node" style="background: #f1f5f9; border-radius: 20px; max-width: 150px; font-weight: 700;">END</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="panel">
+                    <div class="panel-header">5. Instructions for Calling Passengers</div>
+                    <div class="panel-body">
+                        <div class="script-list">
+                            <div class="script-item"><span class="script-num">1</span><div>Introduce yourself and department.</div></div>
+                            <div class="script-item"><span class="script-num">2</span><div>State source of APHO information.</div></div>
+                            <div class="script-item"><span class="script-num">3</span><div>Explain Active Ebola Surveillance purpose.</div></div>
+                            <div class="script-item"><span class="script-num">4</span><div>Confirm arrival dates.</div></div>
+                            <div class="script-item"><span class="script-num">5</span><div>Inquire about general well-being.</div></div>
+                            <div class="script-item"><span class="script-num">6</span><div>Check for explicit system symptoms.</div></div>
+                            <div class="script-item"><span class="script-num">7</span><div>Log responses in dataset.</div></div>
+                            <div class="script-item"><span class="script-num">8</span><div>Advise on the 21-day call cycle mandate.</div></div>
+                            <div class="script-item"><span class="script-num">9</span><div>Thank for cooperation.</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="border-top: 3px solid var(--danger);">
+                    <div class="panel-header" style="background:#b91c1c;">7. Management of Symptomatic Passengers</div>
+                    <div class="panel-body">
+                        <ul>
+                            <li>Immediately inform Medical Officer / Supervisor.</li>
+                            <li>Follow Ebola Response Protocol.</li>
+                            <li>Arrange further evaluation / referral as per guideline.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="disclaimer-panel">
+            <div class="disclaimer-title">Public Disclaimer for Passengers</div>
+            <p style="font-size:0.92rem; text-align:center; font-weight:600; color:#1e293b; margin-bottom:0.75rem;">
+                As per your recent travel history from DR Congo / Uganda / South Sudan, the Brihanmumbai Municipal Corporation (BMC) requests you to monitor your health closely for 21 days from your date of arrival.
+            </p>
+            <div class="symptom-grid">
+                <div class="symptom-tag">1. Fever</div>
+                <div class="symptom-tag">2. Weakness / Fatigue</div>
+                <div class="symptom-tag">3. Headache</div>
+                <div class="symptom-tag">4. Muscle Pain</div>
+                <div class="symptom-tag">5. Vomiting</div>
+                <div class="symptom-tag">6. Diarrhoea</div>
+                <div class="symptom-tag">7. Bleeding</div>
+                <div class="symptom-tag">8. Sore Throat</div>
+            </div>
+            <p style="font-size:0.92rem; font-weight:700; text-align:center; margin-top:0.75rem; color:#1e293b;">
+                Call BMC Health Authorities at <span style="color:var(--danger); font-size:1.05rem;">1075 / 8369585037</span>
+            </p>
+        </div>
+
+        <div class="legend-bar">
+            <span>LEGEND</span>
+            <span>APHO = Airport Health Organization</span>
+            <span>Y = Symptomatic | N = No Symptoms | D = Discharged</span>
+        </div>
+    </div>
+<a href="index.html" style="position: fixed; bottom: 20px; right: 20px; background: #1e3a8a; color: white; text-decoration: none; padding: 10px 16px; border-radius: 30px; font-family: sans-serif; font-size: 14px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 99999; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#1e3a8a'">
+    <svg style="width:16px; height:16px; fill:white;" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Dashboard Home
+</a>
+</body>
+</html>

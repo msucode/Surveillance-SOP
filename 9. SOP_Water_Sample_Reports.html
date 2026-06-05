@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP - Water Sample Reports Workflow (Fixed Connections & Removed Icons)</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #2563eb;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-light: #f8fafc;
+            --border-color: #cbd5e1;
+            --success: #16a34a;
+            --warning-amber: #d97706;
+            --teal-accent: #0d9488;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding: 1.5rem 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid var(--primary-dark);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* HEADER TYPE BANNER CONFIGURATION */
+        header {
+            text-align: center;
+            border: 1px solid var(--primary-dark);
+            background-color: var(--bg-light);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .sop-chart-tag {
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.4rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* CENTRAL FLOW TIMELINE GRAPHIC */
+        .flow-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* PROCESS NODES ELEMENT CARD CONFIGURATION */
+        .node-box {
+            border: 1px solid var(--primary-dark);
+            border-radius: 4px;
+            padding: 0.6rem 1rem;
+            background: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 2;
+        }
+
+        .node-badge-num {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 2px;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .node-content-body {
+            flex-grow: 1;
+        }
+
+        .node-title-main {
+            font-weight: 800;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            letter-spacing: 0.2px;
+        }
+
+        .node-box p, .node-box li {
+            font-size: 0.85rem;
+            margin-top: 0.15rem;
+        }
+
+        .node-box ul {
+            list-style-type: none;
+            padding-left: 0.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .node-box li {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .node-box li::before {
+            content: "•";
+            color: var(--secondary-blue);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .portal-url-text {
+            font-family: monospace;
+            color: var(--secondary-blue);
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: var(--bg-light);
+            padding: 2px 4px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 0.15rem;
+        }
+
+        /* DIRECTIONAL ARROWS FOR PROCESS FLOWS */
+        .flow-arrow-indicator {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            line-height: 1;
+            font-weight: bold;
+            margin: 0.25rem 0;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+        }
+
+        /* CONNECTING LINES LAYOUT SYSTEM */
+        .connector-wrapper {
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .split-box-line {
+            width: 100%;
+            height: 25px;
+            border: 2px solid var(--primary-dark);
+            border-bottom: none;
+            margin-top: -2px;
+            position: relative;
+        }
+
+        .split-box-line::after {
+            content: "↓";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .merge-box-line {
+            width: 100%;
+            height: 25px;
+            border: 2px solid var(--primary-dark);
+            border-top: none;
+            margin-bottom: -2px;
+            position: relative;
+        }
+
+        .merge-box-line::after {
+            content: "↓";
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        /* DUAL BRANCH SPLIT SUBGRID MAPPING */
+        .split-branch-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 2.5rem;
+            row-gap: 0.75rem;
+            width: 100%;
+            position: relative;
+            margin-top: -2px;
+            margin-bottom: -2px;
+        }
+
+        .branch-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: center;
+            width: 100%;
+        }
+
+        .branch-header-banner {
+            background-color: var(--bg-light);
+            border: 1px solid var(--primary-dark);
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            text-align: center;
+            width: 100%;
+            font-weight: 800;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            color: var(--primary-blue);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            z-index: 2;
+        }
+
+        .branch-header-banner span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: none;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 0.15rem;
+        }
+
+        .branch-column .node-box {
+            max-width: 100%;
+        }
+
+        /* ICONS ACCENTS (Kept for Steps 8-11, completely removed from Steps 1-2 as requested) */
+        .node-icon-right-side {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-muted);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .node-icon-right-side svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* RUNNING REGULATORY INJUNCTION CONCLUDING FOOTER */
+        footer {
+            text-align: center;
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            border-radius: 4px;
+            margin-top: 1.5rem;
+        }
+
+        /* RESPONSIVE LAYOUT MATRIX FOR PORTABLE DEVICE VIEWPORTS */
+        @media (max-width: 768px) {
+            .split-branch-layout {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .split-box-line, .merge-box-line {
+                display: none;
+            }
+            .branch-column::before {
+                content: "↓";
+                font-weight: bold;
+                color: var(--primary-dark);
+                margin-bottom: 0.25rem;
+                font-size: 1.2rem;
+            }
+            body {
+                padding: 1rem 0.5rem;
+            }
+            .container {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- MAIN TRACKING TOP BLOCK HEADERS -->
+        <header>
+            <h1>Standard Operating Procedure</h1>
+            <h2>Water Sample Reports</h2>
+            <div class="sop-chart-tag">(Monthly Water Sample Report &amp; Monthly Water Mail Report)</div>
+        </header>
+
+        <!-- CORE SEQUENTIAL PROGRESSION FLOW MAP -->
+        <div class="flow-wrapper">
+            
+            <!-- START BAIL SHAPE BLOCK -->
+            <div class="node-box" style="background:#e2e8f0; border-radius: 20px; max-width: 120px; justify-content:center; min-height:28px; font-weight:800; font-size:0.8rem; letter-spacing:0.5px;">START</div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- STEP 1 (Tiny right icon removed) -->
+            <div class="node-box">
+                <div class="node-badge-num">1</div>
+                <div class="node-content-body">
+                    <div class="node-title-main">Login to FWQMS Portal</div>
+                    <span class="portal-url-text">www.fwqms.mcgm.gov.in/admin/samplescombinedreport.aspx</span>
+                    <p style="color:var(--text-muted); font-weight:500;">Login with authorized credentials</p>
+                </div>
+            </div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- STEP 2 (Tiny right icon removed) -->
+            <div class="connector-wrapper">
+                <div class="node-box">
+                    <div class="node-badge-num">2</div>
+                    <div class="node-content-body">
+                        <div class="node-title-main">Select Water Tab</div>
+                    </div>
+                </div>
+                
+                <!-- DISCRETE CONNECTOR LINES FOR TRUE FLOWCHART RENDERING -->
+                <div class="split-box-line"></div>
+            </div>
+
+            <!-- DUAL OPTION BRANCH LAYOUT -->
+            <div class="split-branch-layout">
+                
+                <!-- LEFT COLUMN: BRANCH A -->
+                <div class="branch-column">
+                    <div class="branch-header-banner">
+                        A. Monthly Water Sample Report
+                        <span>(Updated Monthly)</span>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP A3 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">3</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Select Sample Combined Report</div>
+                            <p style="font-size:0.78rem; font-weight:600; color:var(--primary-blue); margin-top:0.2rem;">Displays four types of samples:</p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.15rem; font-size:0.75rem; font-weight:700; color:var(--text-muted); padding-left:0.25rem; margin-top:0.15rem;">
+                                <span>1. Complaint</span>
+                                <span>2. Cases</span>
+                                <span>3. Other</span>
+                                <span>4. Surv</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP A4 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">4</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Apply Filters</div>
+                            <div style="display:grid; grid-template-columns:95px 1fr; gap:0.15rem 0.5rem; font-size:0.8rem; margin-top:0.25rem;">
+                                <strong>• Filter Selection:</strong> <span>Any Type</span>
+                                <strong>• Range:</strong> <span>5000</span>
+                                <strong>• Date Range:</strong> <span>Select reporting period</span>
+                                <strong>• Ward:</strong> <span>Select applicable ward</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP A5 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">5</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Click Apply</div>
+                            <p style="color:var(--text-muted); font-size:0.8rem;">Generate the report</p>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP A6 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">6</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Retrieve Water Sample Data</div>
+                            <p style="font-size:0.78rem; font-style:italic; color:var(--text-dark); font-weight:500;">(Data includes Surveillance Samples as Any Type is selected)</p>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP A7 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">7</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Compile Data</div>
+                            <p style="font-size:0.8rem;">Transfer retrieved information into the prescribed <strong>Water Sample Report format/template</strong></p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: BRANCH B -->
+                <div class="branch-column">
+                    <div class="branch-header-banner">
+                        B. Monthly Water Mail Report
+                        <span>(To be prepared on the first day of every month)</span>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP B3 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">3</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Open Monthly Water Report</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP B4 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">4</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Apply Filters</div>
+                            <ul>
+                                <li>Select reporting date range</li>
+                                <li>Click on Zone Points</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP B5 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">5</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Retrieve Required Data</div>
+                            <p style="font-weight:600; font-size:0.8rem; color:var(--primary-blue); margin-bottom:0.15rem;">Collect the following information:</p>
+                            <div style="font-size:0.8rem; padding-left:0.5rem; display:flex; flex-direction:column; gap:0.15rem;">
+                                <span>• Total Samples</span>
+                                <span>• E. coli positive samples</span>
+                                <span>• Coliform positive samples</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow-indicator">↓</div>
+
+                    <!-- STEP B6 -->
+                    <div class="node-box">
+                        <div class="node-badge-num">6</div>
+                        <div class="node-content-body">
+                            <div class="node-title-main">Enter Data</div>
+                            <p style="font-size:0.8rem;">Transfer information into the prescribed <strong>Monthly Water Mail document</strong></p>
+                        </div>
+                    </div>
+                    
+                    <!-- BALANCING GEOMETRY HEIGHT WITH THE LEFT BRANCH -->
+                    <div style="flex-grow: 1;"></div>
+
+                </div>
+
+            </div>
+
+            <!-- CONVERGENCE CONSOLIDATED ARROWS SYSTEM -->
+            <div class="connector-wrapper">
+                <div class="merge-box-line"></div>
+                <div style="height: 20px;"></div>
+
+                <!-- STEP 8 -->
+                <div class="node-box">
+                    <div class="node-badge-num">8</div>
+                    <div class="node-content-body">
+                        <div class="node-title-main">Verify Information</div>
+                        <ul>
+                            <li>Verify selected ward / date range</li>
+                            <li>Verify total sample count</li>
+                            <li>Verify E. coli and Coliform values (for Monthly Water Mail)</li>
+                            <li>Check for any missing or duplicate entries</li>
+                        </ul>
+                    </div>
+                    <div class="node-icon-right-side">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- STEP 9 -->
+            <div class="node-box">
+                <div class="node-badge-num">9</div>
+                <div class="node-content-body">
+                    <div class="node-title-main">Finalize Report</div>
+                    <p style="font-size:0.85rem; font-weight:500; color:#475569;">Complete report formatting and ensure accuracy</p>
+                </div>
+                <div class="node-icon-right-side">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                </div>
+            </div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- STEP 10 -->
+            <div class="node-box">
+                <div class="node-badge-num">10</div>
+                <div class="node-content-body">
+                    <div class="node-title-main">Save Report</div>
+                    <p style="font-size:0.85rem;">Save using standard naming convention</p>
+                    <p style="font-size:0.78rem; font-weight:700; color:var(--warning-amber); font-family:monospace; margin-top:0.15rem;">Example: Water_Sample_Report_Month_Year</p>
+                </div>
+                <div class="node-icon-right-side">
+                    <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                </div>
+            </div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- STEP 11 -->
+            <div class="node-box" style="border-bottom: 3px solid var(--primary-blue);">
+                <div class="node-badge-num">11</div>
+                <div class="node-content-body">
+                    <div class="node-title-main">Share Report</div>
+                    <p style="font-size:0.85rem;">Share the finalized report with concerned authorities as per established protocol</p>
+                </div>
+                <div class="node-icon-right-side">
+                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+            </div>
+            <div class="flow-arrow-indicator">↓</div>
+
+            <!-- END BAIL SHAPE BLOCK -->
+            <div class="node-box" style="background:#e2e8f0; border-radius: 20px; max-width: 120px; justify-content:center; min-height:28px; font-weight:800; font-size:0.8rem; letter-spacing:0.5px;">START</div>
+
+        </div>
+
+        <!-- RUNNING AUDIT FOOTER STATEMENT -->
+        <footer>
+            Note: Ensure all data is accurate and verified before finalizing and sharing the reports.
+        </footer>
+
+    </div>
+<a href="index.html" style="position: fixed; bottom: 20px; right: 20px; background: #1e3a8a; color: white; text-decoration: none; padding: 10px 16px; border-radius: 30px; font-family: sans-serif; font-size: 14px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 99999; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#1e3a8a'">
+    <svg style="width:16px; height:16px; fill:white;" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Dashboard Home
+</a>
+</body>
+</html>

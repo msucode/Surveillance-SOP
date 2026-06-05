@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP - Daily Death CIF Monitoring & Field Investigation</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #2563eb;
+            --text-dark: #1e293b;
+            --text-muted: #475569;
+            --bg-light: #f8fafc;
+            --border-color: #cbd5e1;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding: 1.5rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid var(--primary-dark);
+            border-radius: 4px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* HEADER AREA */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary-dark);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .header-title-area {
+            flex-grow: 1;
+        }
+
+        header h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .header-meta-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 240px;
+            padding-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-dark);
+            flex-shrink: 0;
+        }
+
+        /* PURPOSE BAR */
+        .purpose-box {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .purpose-box strong {
+            text-transform: uppercase;
+            color: var(--primary-blue);
+        }
+
+        /* MAIN GRID SYSTEM */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* WORKFLOW COLUMN (LEFT) */
+        .workflow-column {
+            border: 1px solid var(--primary-dark);
+            border-radius: 4px;
+            padding: 0.75rem;
+            background: #ffffff;
+        }
+
+        .workflow-header {
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--primary-dark);
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        .wf-node {
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.4rem 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            justify-content: center;
+            min-height: 44px;
+        }
+
+        .wf-node svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .wf-arrow {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1;
+            margin: 0.15rem 0;
+            font-weight: bold;
+        }
+
+        /* PROCESS COLUMNS (MIDDLE & RIGHT) */
+        .process-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step-box {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.85rem;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--primary-dark);
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+
+        .step-num {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-box p, .step-box li {
+            font-size: 0.85rem;
+        }
+
+        .step-box ul {
+            list-style-type: none;
+            padding-left: 0.25rem;
+            margin-top: 0.25rem;
+        }
+
+        .step-box li {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-box li::before {
+            content: "•";
+            color: var(--secondary-blue);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .divider-dashed {
+            border-top: 1px dashed var(--border-color);
+            margin: 0.5rem 0;
+        }
+
+        .sub-section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-blue);
+            margin-bottom: 0.25rem;
+            margin-top: 0.4rem;
+        }
+
+        /* MESSAGE FORMAT BOX SPECIFIC TO STEP 4 */
+        .message-format-box {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .message-line {
+            display: flex;
+            margin-bottom: 0.25rem;
+            font-size: 0.82rem;
+        }
+        .message-label {
+            font-weight: 600;
+            min-width: 140px;
+        }
+        .message-value {
+            flex-grow: 1;
+            border-bottom: 1px solid #94a3b8;
+        }
+
+        /* DAILY RECORD DATA TABLE */
+        .table-section {
+            border: 1px solid var(--primary-dark);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .table-title {
+            background: var(--primary-dark);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.4rem 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: var(--bg-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 0.5rem 0.25rem;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.5rem 0.25rem;
+            border-right: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+        
+        tr td:last-child, tr th:last-child {
+            border-right: none;
+        }
+
+        /* BOTTOM UTILITIES GRID LAYOUT */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .bottom-panel {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.75rem;
+            background: #ffffff;
+        }
+
+        .panel-header-title {
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* CHECKBOXES ELEMENT */
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            margin-bottom: 0.35rem;
+            font-weight: 500;
+        }
+        .check-square {
+            width: 13px;
+            height: 13px;
+            border: 1px solid var(--primary-dark);
+            border-radius: 2px;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        /* IMPORTANT PANEL SPECIFICS WITH LOGIC CLIPBOARD SVG */
+        .important-content {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .important-list {
+            flex-grow: 1;
+        }
+        .important-list ol {
+            padding-left: 1.1rem;
+        }
+        .important-list li {
+            font-size: 0.82rem;
+            margin-bottom: 0.2rem;
+            font-weight: 600;
+        }
+        .large-panel-svg {
+            width: 64px;
+            height: 64px;
+            fill: #475569;
+            flex-shrink: 0;
+        }
+
+        /* RUNNING SYSTEM FOOTER BRAND NOTE */
+        footer {
+            text-align: center;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.82rem;
+            color: var(--primary-dark);
+            border-radius: 4px;
+        }
+
+        /* RESPONSIVE LAYOUT STYLES FOR TABLETS AND MOBILE OVERRIDES */
+        @media (max-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header-meta-area {
+                padding-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- HEADER MODULE AND METADATA SURVEILLANCE PARAMETERS -->
+        <header>
+            <div class="header-title-area">
+                <h1>SOP &ndash; Daily Death CIF Monitoring<br>&amp; Field Investigation</h1>
+                <h2>Metropolitan Surveillance Unit (MSU), Mumbai</h2>
+            </div>
+            <div class="header-meta-area">
+                <div class="meta-item">
+                    <svg class="meta-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 13.88L11 13V7h1.5v5.25l3.5 2.1-.71 1.53z"/></svg>
+                    <div><strong>Total Time:</strong><br><span style="color:var(--text-muted);">30&ndash;60 Minutes Daily</span></div>
+                </div>
+                <div class="meta-item">
+                    <svg class="meta-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>
+                    <div><strong>Done By:</strong><br><span style="color:var(--text-muted);">Assigned MSU Staff (Daily Duty)</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- OPERATIONAL CORE PURPOSE BAR -->
+        <div class="purpose-box">
+            <p><strong>Purpose:</strong> To ensure timely identification, notification, and field investigation of deaths due to infectious diseases (excluding Tuberculosis) reported through the MSU Death CIF Google Form system.</p>
+        </div>
+
+        <!-- TRI-COLUMN SCHEMATIC MATRIX LAYOUT -->
+        <div class="main-layout">
+            
+            <!-- LEFT WORKFLOW CHART COLUMN -->
+            <div class="workflow-column">
+                <div class="workflow-header">Daily Workflow</div>
+                
+                <div class="wf-node" style="background:#e2e8f0; border-radius: 20px; font-weight:800; min-height:32px;">START</div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                    <div>Open Death CIF<br>Google Sheet<br>at 3:00 PM</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <div>Check all newly<br>submitted death<br>entries</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    <div>Identify infectious<br>disease deaths<br><span style="font-size:0.7rem; font-weight:normal; color:var(--danger);">(TB deaths excluded)</span></div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                    <div>Prepare death case<br>details summary</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/></svg>
+                    <div>Share case information<br>with respective<br>Ward MOH/Nodal Officer</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    <div>Ward deploys field<br>staff for house visit</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    <div>Field investigation &amp;<br>CIF completion</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <div>Survey conducted<br>around residence<br>if required</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node">
+                    <svg viewBox="0 0 24 24"><path d="M5 4v2h14V4H5zm0 10h4v6h6v-6h4l-7-7-7 7z"/></svg>
+                    <div>Report submitted<br>back to MSU</div>
+                </div>
+                <div class="wf-arrow">↓</div>
+
+                <div class="wf-node" style="background:#e2e8f0; border-radius: 20px; font-weight:800; min-height:32px;">END</div>
+            </div>
+
+            <!-- MIDDLE CONTENT COLUMN PROCEDURES -->
+            <div class="process-column">
+                
+                <!-- STEP 1 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">1</span>
+                        <span>Step 1 &ndash; Check Google Form Responses <span style="text-transform:none; font-weight:normal; color:var(--text-muted); ml-auto;">(10 Min)</span></span>
+                    </div>
+                    <p style="margin-bottom: 0.25rem;"><strong>Time:</strong> Daily at 3:00 PM</p>
+                    <p style="margin-bottom: 0.4rem;"><strong>Responsibility:</strong> Assigned MSU surveillance staff</p>
+                    <div class="sub-section-title">Action:</div>
+                    <ul>
+                        <li>Open Death CIF Google Form response sheet</li>
+                        <li>Review all newly submitted entries received from Mumbai hospitals</li>
+                    </ul>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">2</span>
+                        <span>Step 2 &ndash; Screen Reported Deaths <span style="text-transform:none; font-weight:normal; color:var(--text-muted);">(10&ndash;15 Min)</span></span>
+                    </div>
+                    
+                    <div class="sub-section-title" style="color:var(--success);">Include Only:</div>
+                    <ul style="margin-bottom: 0.5rem;">
+                        <li>Infectious disease-related deaths</li>
+                        <li>Suspected outbreak-related deaths</li>
+                        <li>Fever deaths under investigation</li>
+                        <li>Vector-borne diseases</li>
+                        <li>Water-borne diseases</li>
+                        <li>Viral infections</li>
+                        <li>Respiratory infectious diseases</li>
+                    </ul>
+
+                    <div class="divider-dashed"></div>
+
+                    <div class="sub-section-title" style="color:var(--danger);">Exclude:</div>
+                    <ul>
+                        <li>Tuberculosis (TB) deaths</li>
+                        <li>Non-infectious deaths</li>
+                        <li>Trauma/accidents</li>
+                        <li>Poisoning</li>
+                        <li>Chronic non-communicable diseases</li>
+                    </ul>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">3</span>
+                        <span>Step 3 &ndash; Verify &amp; Prepare Case Summary <span style="text-transform:none; font-weight:normal; color:var(--text-muted);">(5&ndash;10 Min)</span></span>
+                    </div>
+                    <div class="sub-section-title">Check:</div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0 0.5rem; padding-left: 0.25rem;">
+                        <span style="font-size:0.82rem;">• Patient Name</span>
+                        <span style="font-size:0.82rem;">• Date of Admission</span>
+                        <span style="font-size:0.82rem;">• Age/Sex</span>
+                        <span style="font-size:0.82rem;">• Date of Death</span>
+                        <span style="font-size:0.82rem;">• Address</span>
+                        <span style="font-size:0.82rem;">• Diagnosis/Cause of Death</span>
+                        <span style="font-size:0.82rem;">• Hospital Name</span>
+                        <span style="font-size:0.82rem;">• Ward Jurisdiction</span>
+                        <span style="font-size:0.82rem; grid-column: span 2;">• Contact Details</span>
+                    </div>
+                    <div class="divider-dashed"></div>
+                    <p style="font-weight: 600; font-size: 0.82rem; color: var(--primary-blue); text-align: center; background: var(--bg-light); padding: 0.25rem; border-radius: 4px;">
+                        Prepare short death summary for communication.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT CONTENT COLUMN PROCEDURES -->
+            <div class="process-column">
+                
+                <!-- STEP 4 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">4</span>
+                        <span>Step 4 &ndash; Inform Respective Ward <span style="color:var(--danger); font-size:0.75rem;">(Most Important)</span></span>
+                    </div>
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:0.2rem;">Share death details with:</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0 0.5rem; font-size:0.8rem; padding-left:0.25rem; margin-bottom:0.4rem;">
+                        <span>• Medical Officer of Health (MOH)</span>
+                        <span>• Ward Nodal Officer</span>
+                        <span style="grid-column: span 2;">• Surveillance Team</span>
+                    </div>
+
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:0.2rem;">Mode of communication:</p>
+                    <div style="display:flex; gap:1rem; font-size:0.8rem; padding-left:0.25rem; margin-bottom:0.4rem; font-weight:600;">
+                        <span>• WhatsApp</span>
+                        <span>• Official group</span>
+                        <span>• Email (if required)</span>
+                    </div>
+
+                    <div class="message-format-box">
+                        <div style="font-weight:700; font-size:0.8rem; text-transform:uppercase; color:var(--primary-blue); border-bottom:1px solid var(--border-color); padding-bottom:2px; margin-bottom:0.4rem; text-align:center;">Message Format</div>
+                        <p style="font-size:0.8rem; font-style:italic; margin-bottom:0.4rem; font-weight:500;">Death case reported through MSU Death CIF Google Form.</p>
+                        <div class="message-line"><span class="message-label">Disease:</span><span class="message-value"></span></div>
+                        <div class="message-line"><span class="message-label">Patient Name/Age/Sex:</span><span class="message-value"></span></div>
+                        <div class="message-line"><span class="message-label">Address:</span><span class="message-value"></span></div>
+                        <div class="message-line"><span class="message-label">Hospital:</span><span class="message-value"></span></div>
+                        <div class="message-line"><span class="message-label">Date of Death:</span><span class="message-value"></span></div>
+                        <div class="message-line"><span class="message-label">Probable Cause of Death:</span><span class="message-value"></span></div>
+                        <p style="font-size:0.78rem; font-weight:600; color:var(--text-muted); margin-top:0.4rem; line-height:1.2;">Respective ward is requested to conduct field investigation, complete CIF, undertake necessary survey activities, and submit report to MSU urgently.</p>
+                    </div>
+                </div>
+
+                <!-- STEP 5 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">5</span>
+                        <span>Step 5 &ndash; Field Investigation by Ward</span>
+                    </div>
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:0.2rem;">Ward Responsibilities:</p>
+                    <ol style="padding-left:1.1rem; font-size:0.82rem;">
+                        <li>Visit residence of deceased patient</li>
+                        <li>Conduct field investigation</li>
+                        <li>Complete CIF (Case Investigation Form)</li>
+                        <li>Collect epidemiological information</li>
+                        <li>Identify clustering/similar illness if present</li>
+                        <li>Conduct surrounding area survey if required</li>
+                        <li>Take necessary public health action</li>
+                        <li>Submit investigation report to MSU</li>
+                    </ol>
+                </div>
+
+                <!-- STEP 6 -->
+                <div class="step-box">
+                    <div class="step-header">
+                        <span class="step-num">6</span>
+                        <span>Step 6 &ndash; Report Follow-Up</span>
+                    </div>
+                    <p style="font-weight:700; font-size:0.82rem; margin-bottom:0.2rem;">MSU staff should:</p>
+                    <ul>
+                        <li>Track pending investigations</li>
+                        <li>Ensure CIF/report submission</li>
+                        <li>Maintain death investigation records</li>
+                        <li>Escalate delayed cases if required</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- DAILY LOG DATA MAINTENANCE LEDGER -->
+        <div class="table-section">
+            <div class="table-title">Daily Record Maintenance</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Total Forms Checked</th>
+                        <th>Infectious Disease Deaths Found</th>
+                        <th>Wards Informed</th>
+                        <th>Reports Received</th>
+                        <th>Pending Cases</th>
+                        <th>Staff Initial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>11/05/2026</td>
+                        <td>12</td>
+                        <td>2</td>
+                        <td>Yes</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td style="color:var(--text-muted); font-weight:normal;">&mdash;&mdash;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- LOWER SYSTEM OVERVIEWS AND EMBEDDED GRAPHICS -->
+        <div class="bottom-grid">
+            
+            <!-- QUALITY CONTROL CHECKLIST -->
+            <div class="bottom-panel">
+                <div class="panel-header-title">Quality Check Before Closing</div>
+                <div class="check-item"><div class="check-square"></div> <span>Google Sheet checked at 3 PM</span></div>
+                <div class="check-item"><div class="check-square"></div> <span>All relevant deaths screened</span></div>
+                <div class="check-item"><div class="check-square"></div> <span>TB deaths excluded</span></div>
+                <div class="check-item"><div class="check-square"></div> <span>Ward informed</span></div>
+                <div class="check-item"><div class="check-square"></div> <span>CIF follow-up done</span></div>
+                <div class="check-item"><div class="check-square"></div> <span>Records updated</span></div>
+            </div>
+
+            <!-- STRATEGIC INJUNCTIONS MAP -->
+            <div class="bottom-panel">
+                <div class="panel-header-title">Important</div>
+                <div class="important-content">
+                    <div class="important-list">
+                        <p style="font-weight:700; font-size:0.85rem; margin-bottom:0.3rem; color:var(--primary-blue);">Goal is to:</p>
+                        <ol>
+                            <li>Ensure rapid death surveillance</li>
+                            <li>Detect unusual infectious disease deaths early</li>
+                            <li>Enable timely field field investigation</li>
+                            <li>Support outbreak detection and response</li>
+                            <li>Maintain proper documentation and reporting</li>
+                        </ol>
+                    </div>
+                    <!-- VALIDATION LOGIC GRAPHIC CLIPBOARD -->
+                    <svg class="large-panel-svg" viewBox="0 0 24 24">
+                        <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RUNNING HEALTH SYSTEM MANDATE FOOTER -->
+        <footer>
+            <strong>NOTE:</strong> All deaths reported must be investigated unless clearly non-infectious or TB. Timely action helps in early detection of outbreaks and prevention of further spread.
+        </footer>
+
+    </div>
+<a href="index.html" style="position: fixed; bottom: 20px; right: 20px; background: #1e3a8a; color: white; text-decoration: none; padding: 10px 16px; border-radius: 30px; font-family: sans-serif; font-size: 14px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 99999; display: flex; align-items: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#1e3a8a'">
+    <svg style="width:16px; height:16px; fill:white;" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Dashboard Home
+</a>
+</body>
+</html>
