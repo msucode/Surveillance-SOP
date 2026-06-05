@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EHO Reporting SOP Dashboard</title>
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #2563eb;
+            --text-dark: #1e293b;
+            --text-muted: #475569;
+            --bg-light: #f8fafc;
+            --border-color: #cbd5e1;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning-amber: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding: 1.5rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 2px solid var(--primary-dark);
+            border-radius: 6px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* TOP ADMINISTRATIVE METADATA BOARD */
+        .sop-header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .sop-header-table td {
+            border: 1px solid var(--primary-dark);
+            padding: 0.4rem 0.6rem;
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+
+        .sop-main-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary-dark);
+            background-color: #f1f5f9;
+        }
+
+        .sop-sub-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--primary-dark) !important;
+        }
+
+        /* MASTER SPLIT GRID SYSTEM */
+        .master-layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* SECTION CODES PANELS */
+        .panel-section {
+            margin-bottom: 1.25rem;
+        }
+
+        .panel-header-title {
+            background-color: var(--primary-dark);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.4rem 0.6rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            border-radius: 2px;
+        }
+
+        .panel-body-text {
+            font-size: 0.88rem;
+            padding-left: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0.25rem;
+        }
+
+        li {
+            font-size: 0.85rem;
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--secondary-blue);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* DATA MATRIX MATRICES STANDARDS */
+        .data-matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .data-matrix-table th {
+            background-color: var(--bg-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            color: var(--primary-dark);
+            text-align: left;
+        }
+
+        .data-matrix-table td {
+            padding: 0.45rem 0.5rem;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .data-matrix-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* RIGHT FLOW TIMELINE GRAPHIC COLUMN */
+        .flowchart-column {
+            border-left: 2px dashed var(--border-color);
+            padding-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .flowchart-main-title {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-dark);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .flow-node-card {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.75rem;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .flow-node-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            color: var(--primary-dark);
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-node-num {
+            background: var(--primary-dark);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .flow-node-body {
+            font-size: 0.82rem;
+        }
+
+        /* METRIC TIMELINE THREE COLUMNS PLACEMENT */
+        .flow-subgrid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.4rem;
+        }
+
+        .subgrid-card {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-light);
+            border-radius: 4px;
+            padding: 0.4rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .subgrid-card h5 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            border-bottom: 1px dashed var(--border-color);
+            width: 100%;
+            padding-bottom: 1px;
+            margin-bottom: 2px;
+        }
+
+        .subgrid-card p {
+            font-size: 0.75rem;
+            line-height: 1.2;
+            color: var(--text-dark);
+        }
+
+        .flow-subgrid-svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
+        }
+
+        .flow-arrow-down {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1;
+            margin: -0.25rem 0;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .flow-split-2way {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        /* MATRIX ICON BLOCKS ROW 10 */
+        .report-format-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+
+        .report-mini-box {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.35rem;
+            text-align: center;
+            background: white;
+        }
+
+        .report-mini-box h6 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mini-table-mockup {
+            width: 100%;
+            height: 20px;
+            border: 1px solid var(--border-color);
+            background: linear-gradient(to bottom, #e2e8f0 4px, transparent 4px);
+            background-size: 100% 8px;
+        }
+
+        /* OBJECT PILLS INFRASTRUCTURE SYST */
+        .legend-strip {
+            border-top: 2px solid var(--primary-dark);
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .legend-item svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text-muted);
+        }
+
+        /* FLOATING DASHBOARD RETURN HOME LINK BUTTON SYSTEM */
+        .floating-home-shortcut {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .floating-home-shortcut:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+        }
+
+        .floating-home-shortcut svg {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        /* CONCLUDING REGULATORY FOOTER ACTION */
+        .caution-strip-footer {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.82rem;
+            text-align: center;
+            margin-top: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        /* VIEWP RESPONSE MODIFICATION PARAMETERS */
+        @media (max-width: 992px) {
+            .master-layout {
+                grid-template-columns: 1fr;
+            }
+            .flowchart-column {
+                border-left: none;
+                padding-left: 0;
+                border-top: 2px dashed var(--border-color);
+                padding-top: 1.5rem;
+            }
+            .report-format-mini-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- HEADER SPECIFICATION STRUCTURAL LOGIC DATA TABLE -->
+        <table class="sop-header-table">
+            <tr>
+                <td colspan="2" class="sop-main-title">EHO Reporting SOP</td>
+                <td style="width:30%; font-weight:700;">SOP Code: <span style="font-weight:500; color:var(--text-muted);">EHO/MSU/Surv/01</span></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="sop-sub-title">Standard Operating Procedure (SOP)</td>
+                <td style="font-weight:700;">Version: <span style="font-weight:500; color:var(--text-muted);">1.0</span></td>
+            </tr>
+            <tr>
+                <td style="width:35%;"><strong>Effective Date:</strong> 01-06-2025</td>
+                <td style="width:35%;"><strong>Prepared By:</strong> EPID Cell, MSU</td>
+                <td><strong>Approved By:</strong> Assistant Municipal Commissioner (Health), Municipal Corporation of Greater Mumbai</td>
+            </tr>
+        </table>
+
+        <!-- MASTER TWO COLUMN WRAPPER DIVISION -->
+        <div class="master-layout">
+            
+            <!-- LEFT MAIN STRUCTURE MODULE (SOP DESCRIPTION DATA GUIDES) -->
+            <div class="sop-details-column">
+                
+                <!-- 1. PURPOSE -->
+                <div class="panel-section">
+                    <div class="panel-header-title">1. Purpose</div>
+                    <p class="panel-body-text">To define the standardized process for collection, compilation, cleaning, analysis, reporting and dissemination of disease surveillance data on the IHIP portal for EHO reporting.</p>
+                </div>
+
+                <!-- 2. SCOPE -->
+                <div class="panel-section">
+                    <div class="panel-header-title">2. Scope</div>
+                    <p class="panel-body-text">This SOP applies to all facilities reporting on the IHIP portal and EPID Cell, MSU for data management, report generation and sharing.</p>
+                </div>
+
+                <!-- 3. DEFINITIONS -->
+                <div class="panel-section">
+                    <div class="panel-header-title">3. Definitions</div>
+                    <div style="display:grid; grid-template-columns: 90px 1fr; gap:0.25rem 0.5rem; font-size:0.85rem; padding-left:0.25rem;">
+                        <strong>• S Form :</strong> <span>Syndropic Surveillance Form (reported by Health post staff)</span>
+                        <strong>• P Form :</strong> <span>Presumptive Surveillance Form (reported by Doctors)</span>
+                        <strong>• L Form :</strong> <span>Laboratory Surveillance Form (reported when samples are taken for lab investigation)</span>
+                        <strong>• MSU :</strong> <span>Municipal Surveillance Unit</span>
+                        <strong>• EHO :</strong> <span>Executive Health Officer</span>
+                        <strong>• AMO :</strong> <span>Assistant Medical Officer</span>
+                        <strong>• IPD :</strong> <span>In-Patient Department</span>
+                        <strong>• OPD :</strong> <span>Out-Patient Department</span>
+                    </div>
+                </div>
+
+                <!-- 4. ROLES & RESPONSIBILITIES -->
+                <div class="panel-section">
+                    <div class="panel-header-title">4. Roles & Responsibilities</div>
+                    <ul>
+                        <li><strong>Facilities:</strong> Report cases on IHIP portal using S, P and L Forms.</li>
+                        <li><strong>MSU Data Manager:</strong> Download, compile, clean, analyze, maintain datasets and generate reports.</li>
+                        <li><strong>Surveillance AMO:</strong> Use reports for follow up and surveillance activities.</li>
+                        <li><strong>State/District Offices:</strong> Use shared data for surveillance and response.</li>
+                    </ul>
+                </div>
+
+                <!-- 5. PROCEDURE MARKS DATA TABLE -->
+                <div class="panel-section">
+                    <div class="panel-header-title">5. Procedure</div>
+                    <table class="data-matrix-table">
+                        <thead>
+                            <tr>
+                                <th style="width:65px; text-align:center;">Step No.</th>
+                                <th>Procedure Step</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="text-align:center; font-weight:700;">1</td><td>Facilities report patients with their demographic details and disease details on IHIP portal using their login credentials under S, P and L Forms.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">2</td><td>After reporting on IHIP portal, cases are available in S Form, P Form and L Form.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">3</td><td>At EPID Cell, MSU Data Manager downloads the required line lists from IHIP portal.</td></tr>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">4</td>
+                                <td>
+                                    <strong>Data Compilation:</strong>
+                                    <div style="font-size:0.82rem; margin-top:0.2rem; padding-left:0.5rem;">
+                                        <strong>4.1</strong> Download cases from P form (Diarrhoea and Dysentery cases) and read them as Gastro cases.<br>
+                                        <strong>4.2</strong> Download all disease cases from L Form.<br>
+                                        <strong>4.3</strong> Compile both datasets (Gastro + L Form all diseases) into one master line list.
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">5</td>
+                                <td>
+                                    <strong>Data Cleaning &amp; Preparation:</strong>
+                                    <div style="font-size:0.82rem; margin-top:0.2rem; padding-left:0.5rem;">
+                                        <strong>5.1</strong> Remove duplicate cases. A patient reported within 30 days for the same disease complaint is considered as duplicate and removed.<br>
+                                        <strong>5.2</strong> Allocate wards to every case in the line list according to the patient's address.<br>
+                                        <strong>5.3</strong> Extract out of Mumbai cases in separate file.
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr><td style="text-align:center; font-weight:700;">6</td><td>Send the out of Mumbai cases Excel file to State Office and the respective District Surveillance Offices through email.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">7</td><td>Make a separate file for Malaria cases. Share this Malaria cases file and the master case line list (including Malaria cases) to all wards marked to Surveillance AMO for further follow up and surveillance activities.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">8</td><td>Maintain the master case line list Google Sheet which includes daily cases appended.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">9</td><td>Maintain the month-wise and disease-wise cases in the respective separate tabs in separate Google Sheet.</td></tr>
+                            <tr><td style="text-align:center; font-weight:700;">10</td><td>Using the pivot table feature of Google Sheet prepare EHO reports (4 formats).</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 6. REPORTS CONFIGURATION (4 FORMATS) TABLE -->
+                <div class="panel-section">
+                    <div class="panel-header-title">6. Reports (4 Formats)</div>
+                    <table class="data-matrix-table">
+                        <thead>
+                            <tr>
+                                <th style="width:75px; text-align:center;">Report No.</th>
+                                <th style="width:160px;">Report Name</th>
+                                <th>Format Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">1</td>
+                                <td><strong>EHO Report</strong></td>
+                                <td>In first column all diseases, from second column Jan to Dec (include half yearly total after Jun and Dec and add total in the last column).</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">2</td>
+                                <td><strong>Ward wise All Disease Format</strong></td>
+                                <td>In first column all wards. From second column each consists Disease 1, Disease 2, Disease 3, ..., Disease n. This includes number of cases wardwise from 01 Jan to Till date.</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">3</td>
+                                <td><strong>Year wise Monsoon Disease Report</strong></td>
+                                <td>In first row it includes Years from 2021 to 2026 (Till date). Each year has number of cases and deaths. Second row is disease name. Now make short table of each disease.</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center; font-weight:700;">4</td>
+                                <td><strong>Ward wise Month wise Monsoon Disease Report</strong></td>
+                                <td>
+                                    Includes 3 tables:<br>
+                                    1) Ward wise Month wise cases (Jan-25 to May-26)<br>
+                                    2) Month wise IPD &amp; OPD percentage to total month cases<br>
+                                    3) Public &amp; Private cases reporting percentage to total month cases
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 7. DATA DISTRIBUTION MECHANISMS -->
+                <div class="panel-section" style="margin-bottom:0;">
+                    <div class="panel-header-title">7. Data Sharing &amp; Dissemination</div>
+                    <p class="panel-body-text">Google Sheets in Step 6 and Step 7 are downloaded as Excel files and scheduled to be shared with stakeholders every next day at 8:00 AM through email.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: FLOW CHART EXECUTION MAP -->
+            <div class="flowchart-column">
+                <div class="flowchart-main-title">EHO Reporting SOP &ndash; Flowchart</div>
+
+                <!-- STEP 1 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">1</span>
+                        <span>Case Reporting by Facilities on IHIP Portal</span>
+                    </div>
+                    <div class="flow-node-body">
+                        <p style="color:var(--text-muted); font-weight:500; text-align:center; margin-bottom:0.4rem;">Facilities report patients with demographic details and disease details on IHIP portal using their login credentials.</p>
+                        <div class="flow-subgrid-3col">
+                            <div class="subgrid-card">
+                                <h5>S Form</h5>
+                                <p style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">(Syndromic)</p>
+                                <svg class="flow-subgrid-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                                <p>Health post staff (ANM/GNM/Field staff) report patients based on syndrome.</p>
+                            </div>
+                            <div class="subgrid-card">
+                                <h5>P Form</h5>
+                                <p style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">(Presumptive)</p>
+                                <svg class="flow-subgrid-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                                <p>Patients visiting health facility for disease complaint, diagnosed by doctor based on symptoms.</p>
+                            </div>
+                            <div class="subgrid-card">
+                                <h5>L Form</h5>
+                                <p style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">(Laboratory)</p>
+                                <svg class="flow-subgrid-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 12H7v-2h10v2zm0-4H7V9h10v2z"/></svg>
+                                <p>When samples are taken from patient for lab investigation, reported on portal.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 2 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">2</span>
+                        <span>After Reporting on IHIP Portal</span>
+                    </div>
+                    <div class="flow-node-body" style="text-align:center; font-weight:600; color:var(--primary-blue);">
+                        Cases are available in S Form, P Form and L Form as per reporting.
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 3 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">3</span>
+                        <span>Data Download by EPID Cell, MSU Data Manager</span>
+                    </div>
+                    <div class="flow-node-body" style="text-align:center; font-weight:500;">
+                        Download required line lists from IHIP portal.
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 4 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">4</span>
+                        <span>Data Compilation</span>
+                    </div>
+                    <div class="flow-node-body">
+                        <div class="flow-subgrid-3col">
+                            <div class="subgrid-card">
+                                <h5>4.1</h5>
+                                <p>Download cases from P form (Diarrhoea and Dysentery) and read as Gastro cases.</p>
+                                <svg style="width:16px; height:16px; fill:var(--danger); margin-top:auto;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3.4 12L12 11.4 8.4 15 7 13.6l3.6-3.6L7 6.4 8.4 5l3.6 3.6L15.6 5 17 6.4 13.4 10l3.6 3.6-1.4 1.4z"/></svg>
+                            </div>
+                            <div class="subgrid-card">
+                                <h5>4.2</h5>
+                                <p>Download all disease cases from L Form.</p>
+                                <svg style="width:16px; height:16px; fill:var(--danger); margin-top:auto;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3.4 12L12 11.4 8.4 15 7 13.6l3.6-3.6L7 6.4 8.4 5l3.6 3.6L15.6 5 17 6.4 13.4 10l3.6 3.6-1.4 1.4z"/></svg>
+                            </div>
+                            <div class="subgrid-card" style="background:#f0fdf4; border-color:#bbf7d0;">
+                                <h5>4.3</h5>
+                                <p>Compile both datasets (Gastro + L Form all diseases) into one master line list.</p>
+                                <svg style="width:18px; height:18px; fill:var(--primary-dark); margin-top:auto;" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm1 11h-2v6H9v-6H3v-2h6V5h2v6h6v2h-3z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 5 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">5</span>
+                        <span>Data Cleaning &amp; Preparation</span>
+                    </div>
+                    <div class="flow-node-body">
+                        <div class="subgrid-card" style="text-align:left; align-items:flex-start; width:100%; margin-bottom:0.4rem; padding:0.5rem 0.75rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.8rem; color:var(--primary-dark);">
+                                <svg style="width:16px; height:16px; fill:var(--secondary-blue);" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                                Remove Duplicate Cases
+                            </div>
+                            <p style="margin-top:0.15rem; font-size:0.78rem;">A patient reported within 30 days for the same disease complaint is considered as duplicate and removed.</p>
+                        </div>
+                        
+                        <div class="subgrid-card" style="text-align:left; align-items:flex-start; width:100%; margin-bottom:0.4rem; padding:0.5rem 0.75rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.8rem; color:var(--primary-dark);">
+                                <svg style="width:16px; height:16px; fill:var(--danger);" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                Ward Allocation
+                            </div>
+                            <p style="margin-top:0.15rem; font-size:0.78rem;">Allocate wards to every case in the line list according to the patient's address.</p>
+                        </div>
+
+                        <div class="subgrid-card" style="text-align:left; align-items:flex-start; width:100%; padding:0.5rem 0.75rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem; font-weight:700; font-size:0.8rem; color:var(--primary-dark);">
+                                <svg style="width:16px; height:16px; fill:var(--warning-amber);" viewBox="0 0 24 24"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-4v2h4v-2zm0 4h-4v2h4v-2z"/></svg>
+                                Out of Mumbai Cases
+                            </div>
+                            <p style="margin-top:0.15rem; font-size:0.78rem;">Extract out of Mumbai cases in separate file.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- SPLIT SECTIONS DETAILED CARD -->
+                <div class="flow-split-2way">
+                    <div class="flow-node-card" style="border-top:3px solid var(--warning-amber);">
+                        <div class="flow-node-header">
+                            <span class="flow-node-num">6</span>
+                            <span>Sharing Out of Mumbai Cases</span>
+                        </div>
+                        <div class="flow-node-body">
+                            <div style="display:flex; align-items:center; gap:0.4rem; font-weight:700; margin-bottom:0.25rem;">
+                                <svg style="width:14px; height:14px; fill:var(--text-muted);" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                Send via email to:
+                            </div>
+                            <p style="font-size:0.78rem; padding-left:0.5rem;">• State Office</p>
+                            <p style="font-size:0.78rem; padding-left:0.5rem;">• Respective District Surveillance Offices</p>
+                        </div>
+                    </div>
+                    <div class="flow-node-card" style="border-top:3px solid var(--success);">
+                        <div class="flow-node-header">
+                            <span class="flow-node-num">7</span>
+                            <span>Sharing Master Line List &amp; Malaria Cases</span>
+                        </div>
+                        <div class="flow-node-body">
+                            <p style="font-size:0.78rem; margin-bottom:0.25rem;">• Make separate file for Malaria cases.</p>
+                            <p style="font-size:0.78rem;">• Share Malaria file &amp; master line list to all wards marked to <strong>Surveillance AMO</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 8 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">8</span>
+                        <span>Master Case Line List Maintenance</span>
+                    </div>
+                    <div class="flow-node-body" style="text-align:center;">
+                        Maintain master case line list Google Sheet which includes daily cases appended.
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 9 FLOW NODE -->
+                <div class="flow-node-card">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">9</span>
+                        <span>Month-Wise &amp; Disease-Wise Data Management</span>
+                    </div>
+                    <div class="flow-node-body" style="text-align:center;">
+                        Maintain month-wise and disease-wise cases in the respective separate tabs in separate Google Sheet.
+                    </div>
+                </div>
+                <div class="flow-arrow-down">↓</div>
+
+                <!-- STEP 10 FLOW NODE -->
+                <div class="flow-node-card" style="border-bottom: 3px solid var(--primary-blue);">
+                    <div class="flow-node-header">
+                        <span class="flow-node-num">10</span>
+                        <span>EHO Reports (4 Formats) &ndash; Using Pivot Table Feature</span>
+                    </div>
+                    <div class="flow-node-body">
+                        <div class="report-format-mini-grid">
+                            <div class="report-mini-box">
+                                <h6>1<br>EHO Report</h6>
+                                <div class="mini-table-mockup"></div>
+                            </div>
+                            <div class="report-mini-box">
+                                <h6>2<br>Ward wise All Disease</h6>
+                                <div class="mini-table-mockup"></div>
+                            </div>
+                            <div class="report-mini-box">
+                                <h6>3<br>Year wise Monsoon</h6>
+                                <div class="mini-table-mockup"></div>
+                            </div>
+                            <div class="report-mini-box">
+                                <h6>4<br>Ward Month Monsoon</h6>
+                                <div class="mini-table-mockup"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEGEND STRIP -->
+                <div class="legend-strip">
+                    <div class="legend-item"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/></svg> Google Sheet</div>
+                    <div class="legend-item"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3.4 12L12 11.4 8.4 15 7 13.6l3.6-3.6L7 6.4 8.4 5l3.6 3.6L15.6 5 17 6.4 13.4 10l3.6 3.6-1.4 1.4z"/></svg> Excel File</div>
+                    <div class="legend-item"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm1 11h-2v6H9v-6H3v-2h6V5h2v6h6v2h-3z"/></svg> Database</div>
+                    <div class="legend-item"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> Email</div>
+                    <div class="legend-item"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg> Scheduled Email</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- LOWER CONCLUDING BANNER ACTION -->
+        <div class="caution-strip-footer">
+            NOTE: All Google Sheets are downloaded as Excel files and scheduled to be shared with stakeholders every next day at 8:00 AM through email.
+        </div>
+
+    </div>
+
+    <!-- FLOATING DASHBOARD SHORTCUT LINK LINKING NAVIGATION HOME -->
+    <a href="index.html" class="floating-home-shortcut">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Dashboard Home
+    </a>
+
+</body>
+</html>
